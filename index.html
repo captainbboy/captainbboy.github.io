@@ -196,8 +196,10 @@
 
         function setup() {
             let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
-
-            if(getCookie("savedGPAs") != null) {
+            
+            let testCookie = getCookie("savedGPAs")
+            testCookie = +testCookie || 0
+            if(testCookie != 0) {
                 savedGPAs = JSON.parse(getCookie("savedGPAs"))
             } else savedGPAs = {}
             console.log(savedGPAs)
@@ -218,7 +220,7 @@
 
             setNumberOfClasses = getCookie('numOfClasses')
             if(setNumberOfClasses) setTable(setNumberOfClasses)
-            else setTable(7)
+            else setTable(0)
 
             updateGPA()
         }
@@ -285,6 +287,8 @@
                 }
             }
         }
+		
+		
     </script>
 
    <body onload="setup()">
