@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>GPA Calculator</title>
+      <link rel="stylesheet" href="index.css">
+   </head>
+
+   <script>
+        let classNames = [];
+        let inputtedGPAValues = [];
+        let inputtedGradeValues = [];
+
+        function setTable(numberOfClasses) {
+            document.getElementById('numrange').value = numberOfClasses
+            document.getElementById('sliderrange').value = numberOfClasses
+
+            let headerRow = document.getElementById('classListRow')
+            let gpaRow = document.getElementById('gpaSelectRow')
+            let gradeRow = document.getElementById('gradeInputRow')
+
+            headerRow.innerHTML = ''
+            gpaRow.innerHTML = ''
+            gradeRow.innerHTML = ''
+
+            let corner = document.createElement('th')
+            corner.style.borderTop = 'none';
+            corner.style.borderLeft = 'none';
+            headerRow.appendChild(corner)
+
+            let titleOfGPARow = document.createElement('th')
+            titleOfGPARow.innerHTML = 'Select the GPA Weight of your Classes:'
+            gpaRow.appendChild(titleOfGPARow)
+
+            let titleOfGradeRow = document.createElement('th')
+            titleOfGradeRow.innerHTML = 'Enter your Current Grade:'
+            gradeRow.appendChild(titleOfGradeRow)
+
+            for (let i = 0; i < parseInt(numberOfClasses); i++) {
+                // Header (Class 1)
+                let headerTH = document.createElement('th')
+                let headerInput = document.createElement('input')
+                headerInput.className = 'headerClassName'
+                headerInput.type = 'text'
+                if(!classNames[i]) headerInput.value = 'Class '+Math.floor(i+1)
+                else headerInput.value = classNames[i]
+                headerInput.onchange = function() {
+                    classNames[i] = headerInput.value
+                }
+                headerTH.appendChild(headerInput)
+                headerRow.appendChild(headerTH)
+
+                // DropDown (5.0)
+                let dropDownTD = document.createElement('td')
+
+                let gpaSelector = document.createElement('div')
+                gpaSelector.className = "select"
+
+                dropDownTD.appendChild(gpaSelector)
+                
+                let select = document.createElement('select')
+                let options = ['4.0', '4.5', '5.0']
+                options.forEach(value => {
+                    let opt = document.createElement('option')
+                    opt.value = value
+                    opt.innerHTML = value
+                    select.appendChild(opt)
+                });
+
+                select.onchange = function() {
+                    inputtedGPAValues[i] = select.value
+                    updateGPA()
+                }
+
+                if(inputtedGPAValues[i]) select.value = inputtedGPAValues[i]
+                
+                let arrow = document.createElement('div')
+                arrow.className = 'select__arrow'
+
+                gpaSelector.appendChild(select)
+                gpaSelector.appendChild(arrow)
+                gpaRow.appendChild(dropDownTD)
+
+                // GradeInput (0-100)
+                let gradeInputTD = document.createElement('td')
+                
+                let gradeInput = document.createElement('input')
+                gradeInput.className = "gradeInput"
+                gradeInput.type = 'number'
+                gradeInput.min = 0;
+                gradeInput.max = 100;
+                gradeInput.value = 0;
+                gradeInput.step = 0.5
+
+                if(inputtedGradeValues[i]) gradeInput.value = inputtedGradeValues[i]
+
+                gradeInput.onchange = function() {
+                    inputtedGradeValues[i] = gradeInput.value
+                    updateGPA()
+                }
+
+                gradeInputTD.appendChild(gradeInput)
+                gradeRow.appendChild(gradeInputTD)
+            }
+        }
+
+        function updateGPA() {
+            GPAPerClasses = [];
+            let headerRow = document.getElementById('classListRow')
+            let gpaRow = document.getElementById('gpaSelectRow')
+            let gradeRow = document.getElementById('gradeInputRow')
+
+            for (let i = 1; i < gradeRow.childNodes.length; i++) {
+                console.log("Class Name: "+headerRow.childNodes[i].getElementsByTagName('input')[0].value)
+                console.log("GPA: "+gpaRow.childNodes[i].getElementsByTagName('select')[0].value)
+                console.log("Grade: "+gradeRow.childNodes[i].getElementsByTagName('input')[0].value)
+                console.log()
+            }
+        }
+
+        function createCookie(name, value, days) {
+            var expires;
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toGMTString();
+            }
+            else {
+                expires = "";
+            }
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1) {
+                        c_end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return "";
+        }
+    </script>
+
+   <body onload="setTable('7')">
+
+      <h1>Calculate Your GPA:</h1>
+
+      <h2>How many classes do you have?</h2>
+      <input id="sliderrange" type="range" min="1" max="10" value="7" oninput="setTable(this.value)">
+      <input id="numrange" type="number" min=1 max=10 value="7" step="1" oninput="setTable(this.value)">
+
+      <div class="holder">
+        <table class="GPACalculator">
+            <tr id="classListRow">
+                <th style="border-top: none; border-left: none;"></th>
+                <th>Class 1</th>
+            </tr>
+            <tr id="gpaSelectRow">
+                <th>Select the GPA Weight of your Classes:</th>
+            </tr>
+            <tr id="gradeInputRow">
+            </tr>
+        </table>
+      </div>
+   </body>
+</html>
