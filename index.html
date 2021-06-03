@@ -15,6 +15,8 @@
         let setNumberOfClasses = 7;
 
         function setTable(numberOfClasses) {
+            if(numberOfClasses > 10) numberOfClasses = 10
+            if(numberOfClasses < 0) numberOfClasses = 0
             setNumberOfClasses = numberOfClasses
             document.getElementById('numrange').value = numberOfClasses
             document.getElementById('sliderrange').value = numberOfClasses
@@ -34,13 +36,14 @@
             headerRow.appendChild(corner)
 
             let titleOfGPARow = document.createElement('th')
+            titleOfGPARow.style.borderLeft = '1px solid #D8D8D8;';
             titleOfGPARow.innerHTML = 'GPA Weight:'
             gpaRow.appendChild(titleOfGPARow)
 
 
             let titleOfGradeRow = document.createElement('th')
+            titleOfGradeRow.style.borderLeft = '1px solid #D8D8D8;';
             titleOfGradeRow.innerHTML = 'Current Grades:'
-            titleOfGradeRow.id = "fittext"
             gradeRow.appendChild(titleOfGradeRow)
 
             for (let i = 0; i < parseInt(numberOfClasses); i++) {
@@ -53,6 +56,7 @@
                 else headerInput.value = classNames[i]
                 headerInput.onchange = function() {
                     classNames[i] = headerInput.value
+                    createCookie("classNames", classNames, 365)
                 }
                 headerTH.appendChild(headerInput)
                 headerRow.appendChild(headerTH)
@@ -102,6 +106,8 @@
                 if(inputtedGradeValues[i]) gradeInput.value = inputtedGradeValues[i]
 
                 gradeInput.onchange = function() {
+                    if(gradeInput.value > 100) gradeInput.value = 100
+                    if(gradeInput.value < 0) gradeInput.value = 0
                     inputtedGradeValues[i] = gradeInput.value
                     updateGPA()
                 }
@@ -140,7 +146,6 @@
             document.getElementById('allenISDFormulaWeighted').innerHTML = "Simple Average Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
             document.getElementById('allenISDFormulaUnweighted').innerHTML = "Simple Average Weighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
 
-            createCookie("classNames", classNames, 365)
             createCookie("inputtedGPAValues", inputtedGPAValues, 365)
             createCookie("inputtedGradeValues", inputtedGradeValues, 365)
         }
@@ -182,7 +187,6 @@
             if (typeof inputtedGradeValues == 'string') inputtedGradeValues = inputtedGradeValues.split(',')
 
             setNumberOfClasses = getCookie('numOfClasses')
-            console.log(setNumberOfClasses)
             if(setNumberOfClasses) setTable(setNumberOfClasses)
             else setTable(7)
 
