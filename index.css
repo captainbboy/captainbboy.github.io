@@ -68,9 +68,21 @@ li {
 .holder {
     display: block;
     max-width: 95%;
-    margin-top: 10vh;
+    margin-top: 7.5vh;
     margin-left: auto;
     margin-right: auto;
+}
+
+.GPAInputDiv {
+    overflow-x: auto;
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+
+.GPACalculator {
+    table-layout: fixed;
+    margin:40px auto 0px auto;
+    border-collapse: collapse;
 }
 
 .GPACalculator > tr, th, td {
@@ -171,24 +183,15 @@ li {
 
 .resultsBox {
     border-collapse: collapse;
-    margin-top: 10vh;
-    margin-left: -1px;
+    margin-top: 7.5vh;
+    margin-left: calc(1vw + -1px);
+    margin-right: 1vw;
     padding: 1vh 1vw;
     border: 1px solid #D8D8D8;
     text-align: left;
     display: block;
     min-width: 25%;
     max-width: 100%;
-}
-
-.GPAInputDiv {
-    overflow-x: auto;
-}
-
-.GPACalculator {
-    table-layout: fixed;
-    margin:40px auto 0px auto;
-    border-collapse: collapse;
 }
 
 @media (min-width: 1921px) {

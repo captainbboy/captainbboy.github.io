@@ -9,6 +9,22 @@
    </head>
 
    <script>
+        let savedGPAs = {
+            // Semester1: {
+            //     classNames: ["testingClass1"],
+            //     inputtedGPAValues: ["4.0", "4.5", "5.0"],
+            //     inputtedGradeValues: [100, 90, 80],
+            //     setNumberOfClasses: 3
+            // }
+        };
+        
+        /* savedGPAs["name"] = {
+            classNames: classNames,
+            inputtedGPAValues: inputtedGPAValues,
+            inputtedGradeValues: inputtedGradeValues,
+            setNumberOfClasses: setNumberOfClasses
+        } */ 
+
         let classNames = [];
         let inputtedGPAValues = [];
         let inputtedGradeValues = [];
@@ -142,9 +158,9 @@
             let allenISDSumOfGrades = -(sumOfGrades-(numberOfClasses*100))*0.05
 
             document.getElementById('simpleAverage').innerHTML = "Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(2)
-            document.getElementById('simpleAverageUnweighted').innerHTML = "Simple Average Weighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
-            document.getElementById('allenISDFormulaWeighted').innerHTML = "Simple Average Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
-            document.getElementById('allenISDFormulaUnweighted').innerHTML = "Simple Average Weighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            document.getElementById('simpleAverageUnweighted').innerHTML = "Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
+            document.getElementById('allenISDFormulaWeighted').innerHTML = "AllenISD Formula Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            document.getElementById('allenISDFormulaUnweighted').innerHTML = "AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
 
             createCookie("inputtedGPAValues", inputtedGPAValues, 365)
             createCookie("inputtedGradeValues", inputtedGradeValues, 365)
@@ -179,6 +195,20 @@
         }
 
         function setup() {
+            let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
+
+            if(getCookie("savedGPAs") != null) {
+                savedGPAs = JSON.parse(getCookie("savedGPAs"))
+            } else savedGPAs = {}
+            console.log(savedGPAs)
+
+            Object.keys(savedGPAs).forEach(gpa => {
+                let newOption = document.createElement('option')
+                newOption.value = gpa
+                newOption.innerHTML = gpa
+                savedGPAsDropDown.appendChild(newOption)
+            })
+
             classNames = getCookie('classNames') || []
             if (typeof classNames == 'string') classNames = classNames.split(',')
             inputtedGPAValues = getCookie('inputtedGPAValues') || []
@@ -192,6 +222,69 @@
 
             updateGPA()
         }
+
+        function changeCurrentGPA(savedGPAName) {
+            if(savedGPAName == 'None Selected') {
+                classNames = []
+                inputtedGPAValues = []
+                inputtedGradeValues = []
+                createCookie("classNames", classNames, 365)
+                setTable(1)
+                updateGPA()
+                document.getElementById('InputtedGPAName').value = "";
+            }
+            else if(savedGPAs[savedGPAName]) {
+                classNames = savedGPAs[savedGPAName].classNames
+                inputtedGPAValues = savedGPAs[savedGPAName].inputtedGPAValues
+                inputtedGradeValues = savedGPAs[savedGPAName].inputtedGradeValues
+                setTable(savedGPAs[savedGPAName].setNumberOfClasses)
+                updateGPA()
+                document.getElementById('InputtedGPAName').value = savedGPAName;
+            } else console.log("[ERROR] Cannot find that Saved GPA.")
+        }
+
+        function saveGPA() {
+            let InputtedGPAName = document.getElementById('InputtedGPAName').value
+            if(InputtedGPAName) {
+                if(!savedGPAs[InputtedGPAName]) {
+                    let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
+                    let newOption = document.createElement('option')
+                    newOption.value = InputtedGPAName
+                    newOption.innerHTML = InputtedGPAName
+                    newOption.id = InputtedGPAName
+                    savedGPAsDropDown.appendChild(newOption)
+                }
+                savedGPAs[InputtedGPAName] = {
+                    classNames: classNames,
+                    inputtedGPAValues: inputtedGPAValues,
+                    inputtedGradeValues: inputtedGradeValues,
+                    setNumberOfClasses: setNumberOfClasses
+                }
+
+                createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
+            }
+        }
+
+        function deleteSemesterGPA() {
+            let InputtedGPAName = document.getElementById('InputtedGPAName').value
+            if(InputtedGPAName) {
+                if(savedGPAs[InputtedGPAName]) {
+                    delete savedGPAs[InputtedGPAName]
+                    createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
+                    changeCurrentGPA('None Selected')
+                    let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
+                    let toRemove = document.getElementById(InputtedGPAName)
+                    savedGPAsDropDown.removeChild(toRemove)
+                    var opts = savedGPAsDropDown.options;
+                    for (var opt, j = 0; opt = opts[j]; j++) {
+                        if (opt.id == 'NoneSelected') {
+                            savedGPAsDropDown.selectedIndex = j;
+                        break;
+                        }
+                    }
+                }
+            }
+        }
     </script>
 
    <body onload="setup()">
@@ -201,6 +294,13 @@
     <h2>How many classes do you have?</h2>
     <input id="sliderrange" type="range" min="1" max="10" value="7" oninput="setTable(this.value)">
     <input id="numrange" type="number" min=1 max=10 value="7" step="1" oninput="setTable(this.value)">
+
+    <h2>Saved GPAs:</h2>
+    <div class="select" style="width: 25vw;">
+        <select id="savedGPAsDropDown" onchange="changeCurrentGPA(this.value)">
+            <option value="None Selected" id="NoneSelected">None Selected</option>
+        </select>
+    </div>
 
     <div class="holder">
         <div class="GPAInputDiv">
@@ -224,6 +324,11 @@
             <h4 id="simpleAverageUnweighted">Simple Average Unweighted: </h4>
             <h4 id="allenISDFormulaWeighted">AllenISD Formula Weighted: </h4>
             <h4 id="allenISDFormulaUnweighted">AllenISD Formula Unweighted: </h4>
+            <span>
+                <input type="text" placeholder="Semester 1" id="InputtedGPAName"></input>
+                <button onclick="saveGPA()">Save Semester GPA</button>
+                <button onclick="deleteSemesterGPA()">Delete Inputted Semester GPA</button>
+            </span>
         </div>
     </div>
 
