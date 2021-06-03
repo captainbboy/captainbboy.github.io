@@ -12,10 +12,13 @@
         let classNames = [];
         let inputtedGPAValues = [];
         let inputtedGradeValues = [];
+        let setNumberOfClasses = 7;
 
         function setTable(numberOfClasses) {
+            setNumberOfClasses = numberOfClasses
             document.getElementById('numrange').value = numberOfClasses
             document.getElementById('sliderrange').value = numberOfClasses
+            createCookie("numOfClasses", setNumberOfClasses, 365)
 
             let headerRow = document.getElementById('classListRow')
             let gpaRow = document.getElementById('gpaSelectRow')
@@ -31,11 +34,13 @@
             headerRow.appendChild(corner)
 
             let titleOfGPARow = document.createElement('th')
-            titleOfGPARow.innerHTML = 'Select the GPA Weight of your Classes:'
+            titleOfGPARow.innerHTML = 'GPA Weight:'
             gpaRow.appendChild(titleOfGPARow)
 
+
             let titleOfGradeRow = document.createElement('th')
-            titleOfGradeRow.innerHTML = 'Enter your Current Grade:'
+            titleOfGradeRow.innerHTML = 'Current Grades:'
+            titleOfGradeRow.id = "fittext"
             gradeRow.appendChild(titleOfGradeRow)
 
             for (let i = 0; i < parseInt(numberOfClasses); i++) {
@@ -107,17 +112,37 @@
         }
 
         function updateGPA() {
-            GPAPerClasses = [];
+            weightedSimples = 0;
+            unweightedSimples = 0;
+            sumOfGrades = 0;
+            totalGPAWeight = 0;
             let headerRow = document.getElementById('classListRow')
             let gpaRow = document.getElementById('gpaSelectRow')
             let gradeRow = document.getElementById('gradeInputRow')
 
             for (let i = 1; i < gradeRow.childNodes.length; i++) {
-                console.log("Class Name: "+headerRow.childNodes[i].getElementsByTagName('input')[0].value)
-                console.log("GPA: "+gpaRow.childNodes[i].getElementsByTagName('select')[0].value)
-                console.log("Grade: "+gradeRow.childNodes[i].getElementsByTagName('input')[0].value)
-                console.log()
+                let className = headerRow.childNodes[i].getElementsByTagName('input')[0].value
+                let gpaWeight = parseFloat(gpaRow.childNodes[i].getElementsByTagName('select')[0].value)
+                totalGPAWeight += gpaWeight
+                let grade = parseFloat(gradeRow.childNodes[i].getElementsByTagName('input')[0].value)
+                sumOfGrades += (grade)
+                let weightedSimple = gpaWeight*grade*0.01
+                weightedSimples += weightedSimple
+                let unweightedSimple = 4*grade*0.01
+                unweightedSimples += unweightedSimple
             }
+
+            let numberOfClasses = (gradeRow.childNodes.length-1)
+            let allenISDSumOfGrades = -(sumOfGrades-(numberOfClasses*100))*0.05
+
+            document.getElementById('simpleAverage').innerHTML = "Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(2)
+            document.getElementById('simpleAverageUnweighted').innerHTML = "Simple Average Weighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
+            document.getElementById('allenISDFormulaWeighted').innerHTML = "Simple Average Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            document.getElementById('allenISDFormulaUnweighted').innerHTML = "Simple Average Weighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+
+            createCookie("classNames", classNames, 365)
+            createCookie("inputtedGPAValues", inputtedGPAValues, 365)
+            createCookie("inputtedGradeValues", inputtedGradeValues, 365)
         }
 
         function createCookie(name, value, days) {
@@ -147,28 +172,56 @@
             }
             return "";
         }
+
+        function setup() {
+            classNames = getCookie('classNames') || []
+            if (typeof classNames == 'string') classNames = classNames.split(',')
+            inputtedGPAValues = getCookie('inputtedGPAValues') || []
+            if (typeof inputtedGPAValues == 'string') inputtedGPAValues = inputtedGPAValues.split(',')
+            inputtedGradeValues = getCookie('inputtedGradeValues') || []
+            if (typeof inputtedGradeValues == 'string') inputtedGradeValues = inputtedGradeValues.split(',')
+
+            setNumberOfClasses = getCookie('numOfClasses')
+            console.log(setNumberOfClasses)
+            if(setNumberOfClasses) setTable(setNumberOfClasses)
+            else setTable(7)
+
+            updateGPA()
+        }
     </script>
 
-   <body onload="setTable('7')">
+   <body onload="setup()">
 
-      <h1>Calculate Your GPA:</h1>
+    <h1>Calculate Your GPA:</h1>
 
-      <h2>How many classes do you have?</h2>
-      <input id="sliderrange" type="range" min="1" max="10" value="7" oninput="setTable(this.value)">
-      <input id="numrange" type="number" min=1 max=10 value="7" step="1" oninput="setTable(this.value)">
+    <h2>How many classes do you have?</h2>
+    <input id="sliderrange" type="range" min="1" max="10" value="7" oninput="setTable(this.value)">
+    <input id="numrange" type="number" min=1 max=10 value="7" step="1" oninput="setTable(this.value)">
 
-      <div class="holder">
-        <table class="GPACalculator">
-            <tr id="classListRow">
-                <th style="border-top: none; border-left: none;"></th>
-                <th>Class 1</th>
-            </tr>
-            <tr id="gpaSelectRow">
-                <th>Select the GPA Weight of your Classes:</th>
-            </tr>
-            <tr id="gradeInputRow">
-            </tr>
-        </table>
-      </div>
+    <div class="holder">
+        <div class="GPAInputDiv">
+            <table class="GPACalculator">
+                <tr id="classListRow">
+                    <th style="border-top: none; border-left: none;"></th>
+                    <th>Class 1</th>
+                </tr>
+                <tr id="gpaSelectRow">
+                    <th>GPA Weight:</th>
+                </tr>
+                <tr id="gradeInputRow">
+                    <th>Current Grades:</th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="resultsBox">
+            <h2><strong>GPA:</strong></h2>
+            <h4 id="simpleAverage">Simple Average Weighted: </h4>
+            <h4 id="simpleAverageUnweighted">Simple Average Unweighted: </h4>
+            <h4 id="allenISDFormulaWeighted">AllenISD Formula Weighted: </h4>
+            <h4 id="allenISDFormulaUnweighted">AllenISD Formula Unweighted: </h4>
+        </div>
+    </div>
+
    </body>
 </html>

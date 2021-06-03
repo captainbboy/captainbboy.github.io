@@ -45,7 +45,7 @@ hr {
 	height: 1px;
 	background-color: #d8d8d8;
 	border: none;
-	width: 100%;
+	/* width: 100%; */
 	margin: 0px;
 }
 
@@ -65,15 +65,6 @@ li {
 	line-height: 1.5em;
 }
 
-aside,
-[class *= "sidebar"],
-[id *= "sidebar"] {
-	max-width: 90%;
-	margin: 0 auto;
-	border: 1px solid lightgrey;
-	padding: 5px 15px;
-}
-
 .holder {
     display: block;
     max-width: 95%;
@@ -82,21 +73,16 @@ aside,
     margin-right: auto;
 }
 
-.GPACalculator {
-    table-layout: fixed;
-    border-collapse: collapse;
-    overflow-x: hidden;
-    width: 100%;
-}
-
 .GPACalculator > tr, th, td {
     border: 1px solid #D8D8D8;
     text-align: center;
+    min-width: 70px;
 }
 
 .GPACalculator th {
     padding-left: 1vw;
     padding-right: 1vw;
+    word-wrap: normal;
 }
 
 .headerClassName {
@@ -119,7 +105,7 @@ aside,
     display: inline-block;
     width: 100%;
     cursor: pointer;
-    padding: 10px 15px;
+    padding: 1vh 1vw;
     outline: 0;
     border: 0;
     border-radius: 0;
@@ -137,12 +123,12 @@ aside,
     
 .select select:hover,
 .select select:focus {
-      color: #D8D8D8;
-      background: #121212;
+    color: #D8D8D8;
+    background: #121212;
 }
 .select select:disabled {
-      opacity: 0.5;
-      pointer-events: none;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .select__arrow {
@@ -180,6 +166,28 @@ aside,
     -webkit-appearance: none;
     -moz-appearance: none;
     height: 5vh;
+}
+
+.resultsBox {
+    border-collapse: collapse;
+    margin-top: 10vh;
+    margin-left: -1px;
+    padding: 1vh 1vw;
+    border: 1px solid #D8D8D8;
+    text-align: left;
+    display: block;
+    min-width: 25%;
+    max-width: 100%;
+}
+
+.GPAInputDiv {
+    overflow-x: auto;
+}
+
+.GPACalculator {
+    table-layout: fixed;
+    margin:40px auto 0px auto;
+    border-collapse: collapse;
 }
 
 @media (min-width: 1921px) {
