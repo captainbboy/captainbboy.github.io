@@ -290,7 +290,7 @@
                     }
                     newDropDown.appendChild(checkBox)
                     let newSpan = document.createElement('span')
-                    newSpan.innerHTML = " "+gpa
+                    newSpan.innerHTML = " "+InputtedGPAName
                     newDropDown.appendChild(newSpan)
                     checkList.appendChild(newDropDown)
                 }
@@ -300,7 +300,7 @@
                     inputtedGradeValues: inputtedGradeValues,
                     setNumberOfClasses: setNumberOfClasses
                 }
-
+                console.log(savedGPAs)
                 createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
             }
         }
