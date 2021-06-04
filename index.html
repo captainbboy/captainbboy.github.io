@@ -315,6 +315,8 @@
                     changeCurrentGPA('None Selected')
                     checkBox = document.getElementById(InputtedGPAName + 'id')
                     selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
+                    var anchor = document.getElementsByClassName('anchor')[0]
+                    anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)"
                     let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
                     var checkList = document.getElementById('semestersListItems');
                     let toRemove = document.getElementById(InputtedGPAName+"~~~")
