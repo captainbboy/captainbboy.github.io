@@ -194,6 +194,36 @@ li {
     max-width: 100%;
 }
 
+.resultsBox input[type=text] {
+    background-color: #121212;
+    color: #D8D8D8;
+    border: 1px solid lightgray;
+    line-height: 20px;
+    text-align: center;
+}
+
+.resultsBox input[type=text]::placeholder {
+    color: rgb(139, 135, 135);
+}
+
+.resultsBox button {
+    background-color: #121212;
+    color: #D8D8D8;
+    border: 1px solid lightgray;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.resultsBox button:hover {
+    background-color: #272727;
+    color: #D8D8D8;
+}
+
+.resultsBox button:active {
+    background-color: #272727;
+    color: #D8D8D8;
+}
+
 @media (min-width: 1921px) {
 	body {
 		font-size: 18px;
