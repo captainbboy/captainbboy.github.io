@@ -282,6 +282,7 @@
                     newDropDown.id = InputtedGPAName+"|||"
                     let checkBox = document.createElement('input')
                     checkBox.type = 'checkbox'
+                    checkBox.id = InputtedGPAName.toString() + 'id'
                     checkBox.onclick = function() {
                         if(checkBox.checked) selectedSemestersDropDown.push(checkBox)
                         else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
@@ -312,6 +313,8 @@
                     delete savedGPAs[InputtedGPAName]
                     createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
                     changeCurrentGPA('None Selected')
+                    checkBox = document.getElementById(InputtedGPAName + 'id')
+                    selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
                     let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
                     var checkList = document.getElementById('semestersListItems');
                     let toRemove = document.getElementById(InputtedGPAName+"~~~")
