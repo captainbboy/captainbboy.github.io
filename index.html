@@ -198,9 +198,8 @@
             let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
             
             let testCookie = getCookie("savedGPAs")
-            testCookie = +testCookie || 0
-            if(testCookie != 0) {
-                savedGPAs = JSON.parse(getCookie("savedGPAs"))
+            if(testCookie.includes("{") && testCookie.includes('}')) {
+                savedGPAs = JSON.parse(testCookie)
             } else savedGPAs = {}
             console.log(savedGPAs)
 
@@ -239,6 +238,7 @@
                 classNames = savedGPAs[savedGPAName].classNames
                 inputtedGPAValues = savedGPAs[savedGPAName].inputtedGPAValues
                 inputtedGradeValues = savedGPAs[savedGPAName].inputtedGradeValues
+                createCookie("classNames", classNames, 365)
                 setTable(savedGPAs[savedGPAName].setNumberOfClasses)
                 updateGPA()
                 document.getElementById('InputtedGPAName').value = savedGPAName;
@@ -301,7 +301,7 @@
 
     <h2>Saved GPAs:</h2>
     <div class="select" style="width: 25vw;">
-        <select id="savedGPAsDropDown" onchange="changeCurrentGPA(this.value)">
+        <select id="savedGPAsDropDown" oninput="changeCurrentGPA(this.value)">
             <option value="None Selected" id="NoneSelected">None Selected</option>
         </select>
     </div>
