@@ -196,7 +196,8 @@
 
         function setup() {
             let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
-            
+            var checkList = document.getElementById('semestersListItems');
+
             let testCookie = getCookie("savedGPAs")
             if(testCookie.includes("{") && testCookie.includes('}')) {
                 savedGPAs = JSON.parse(testCookie)
@@ -205,9 +206,18 @@
 
             Object.keys(savedGPAs).forEach(gpa => {
                 let newOption = document.createElement('option')
+                newOption.id = gpa+"~~~"
                 newOption.value = gpa
                 newOption.innerHTML = gpa
                 savedGPAsDropDown.appendChild(newOption)
+
+                let newDropDown = document.createElement('li')
+                newDropDown.id = gpa+"|||"
+                let checkBox = document.createElement('input')
+                checkBox.type = 'checkbox'
+                newDropDown.appendChild(checkBox)
+                newDropDown.innerHTML += gpa
+                checkList.appendChild(newDropDown)
             })
 
             classNames = getCookie('classNames') || []
@@ -250,11 +260,21 @@
             if(InputtedGPAName) {
                 if(!savedGPAs[InputtedGPAName]) {
                     let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
+                    var checkList = document.getElementById('semestersListItems');
+
                     let newOption = document.createElement('option')
                     newOption.value = InputtedGPAName
                     newOption.innerHTML = InputtedGPAName
-                    newOption.id = InputtedGPAName
+                    newOption.id = InputtedGPAName+"~~~"
                     savedGPAsDropDown.appendChild(newOption)
+
+                    let newDropDown = document.createElement('li')
+                    newDropDown.id = InputtedGPAName+"|||"
+                    let checkBox = document.createElement('input')
+                    checkBox.type = 'checkbox'
+                    newDropDown.appendChild(checkBox)
+                    newDropDown.innerHTML += InputtedGPAName
+                    checkList.appendChild(newDropDown)
                 }
                 savedGPAs[InputtedGPAName] = {
                     classNames: classNames,
@@ -275,8 +295,14 @@
                     createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
                     changeCurrentGPA('None Selected')
                     let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
-                    let toRemove = document.getElementById(InputtedGPAName)
+                    var checkList = document.getElementById('semestersListItems');
+                    let toRemove = document.getElementById(InputtedGPAName+"~~~")
+                    console.log(InputtedGPAName)
+                    console.log(toRemove)
+                    let toRemove2 = document.getElementById(InputtedGPAName+"|||")
+                    console.log(toRemove2)
                     savedGPAsDropDown.removeChild(toRemove)
+                    checkList.removeChild(toRemove2)
                     var opts = savedGPAsDropDown.options;
                     for (var opt, j = 0; opt = opts[j]; j++) {
                         if (opt.id == 'NoneSelected') {
@@ -286,6 +312,14 @@
                     }
                 }
             }
+        }
+
+        function toggleSemestersCheckList() {
+            var checkList = document.getElementById('semestersList');
+            if (checkList.classList.contains('visible'))
+                checkList.classList.remove('visible');
+            else
+                checkList.classList.add('visible');
         }
 		
 		
@@ -322,17 +356,27 @@
             </table>
         </div>
 
-        <div class="resultsBox">
-            <h2><strong>GPA:</strong></h2>
-            <h4 id="simpleAverage">Simple Average Weighted: </h4>
-            <h4 id="simpleAverageUnweighted">Simple Average Unweighted: </h4>
-            <h4 id="allenISDFormulaWeighted">AllenISD Formula Weighted: </h4>
-            <h4 id="allenISDFormulaUnweighted">AllenISD Formula Unweighted: </h4>
-            <span>
-                <input type="text" placeholder="Semester 1" id="InputtedGPAName"></input>
-                <button onclick="saveGPA()">Save Semester GPA</button>
-                <button onclick="deleteSemesterGPA()">Delete Inputted Semester GPA</button>
-            </span>
+        <div class="resultsBox row">
+            <div class="column">
+                <h2><strong>GPA:</strong></h2>
+                <h4 id="simpleAverage">Simple Average Weighted: </h4>
+                <h4 id="simpleAverageUnweighted">Simple Average Unweighted: </h4>
+                <h4 id="allenISDFormulaWeighted">AllenISD Formula Weighted: </h4>
+                <h4 id="allenISDFormulaUnweighted">AllenISD Formula Unweighted: </h4>
+                <span>
+                    <input type="text" placeholder="Semester 1" id="InputtedGPAName"></input>
+                    <button onclick="saveGPA()">Save Semester GPA</button>
+                    <button onclick="deleteSemesterGPA()">Delete Inputted Semester GPA</button>
+                </span>
+            </div>
+            <div class="column" style="margin-left: -1px;">
+                <h2><strong>Calculate Overall GPA!</strong></h2>
+                <div id="semestersList" class="dropdown-check-list" tabindex="100">
+                    <span class="anchor" onclick="toggleSemestersCheckList()">Select Semesters</span>
+                    <ul class="items" id="semestersListItems">
+                    </ul>
+                  </div>
+            </div>
         </div>
     </div>
 
