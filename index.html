@@ -30,6 +30,8 @@
         let inputtedGradeValues = [];
         let setNumberOfClasses = 7;
 
+        let selectedSemestersDropDown = [];
+
         function setTable(numberOfClasses) {
             if(numberOfClasses > 10) numberOfClasses = 10
             if(numberOfClasses < 0) numberOfClasses = 0
@@ -216,7 +218,15 @@
                 let checkBox = document.createElement('input')
                 checkBox.type = 'checkbox'
                 newDropDown.appendChild(checkBox)
-                newDropDown.innerHTML += gpa
+                let newSpan = document.createElement('span')
+                newSpan.innerHTML = " "+gpa
+                newDropDown.appendChild(newSpan)
+                checkBox.onclick = function() {
+                    if(checkBox.checked) selectedSemestersDropDown.push(checkBox)
+                    else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
+                    var anchor = document.getElementsByClassName('anchor')[0]
+                    anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)"
+                }
                 checkList.appendChild(newDropDown)
             })
 
@@ -272,8 +282,16 @@
                     newDropDown.id = InputtedGPAName+"|||"
                     let checkBox = document.createElement('input')
                     checkBox.type = 'checkbox'
+                    checkBox.onclick = function() {
+                        if(checkBox.checked) selectedSemestersDropDown.push(checkBox)
+                        else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
+                        var anchor = document.getElementsByClassName('anchor')[0]
+                        anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)"
+                    }
                     newDropDown.appendChild(checkBox)
-                    newDropDown.innerHTML += InputtedGPAName
+                    let newSpan = document.createElement('span')
+                    newSpan.innerHTML = " "+gpa
+                    newDropDown.appendChild(newSpan)
                     checkList.appendChild(newDropDown)
                 }
                 savedGPAs[InputtedGPAName] = {
@@ -297,10 +315,7 @@
                     let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
                     var checkList = document.getElementById('semestersListItems');
                     let toRemove = document.getElementById(InputtedGPAName+"~~~")
-                    console.log(InputtedGPAName)
-                    console.log(toRemove)
                     let toRemove2 = document.getElementById(InputtedGPAName+"|||")
-                    console.log(toRemove2)
                     savedGPAsDropDown.removeChild(toRemove)
                     checkList.removeChild(toRemove2)
                     var opts = savedGPAsDropDown.options;
@@ -316,6 +331,8 @@
 
         function toggleSemestersCheckList() {
             var checkList = document.getElementById('semestersList');
+            var anchor = document.getElementsByClassName('anchor')[0]
+            anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)"
             if (checkList.classList.contains('visible'))
                 checkList.classList.remove('visible');
             else
@@ -372,7 +389,7 @@
             <div class="column" style="margin-left: -1px;">
                 <h2><strong>Calculate Overall GPA!</strong></h2>
                 <div id="semestersList" class="dropdown-check-list" tabindex="100">
-                    <span class="anchor" onclick="toggleSemestersCheckList()">Select Semesters</span>
+                    <span class="anchor" onclick="toggleSemestersCheckList()">Select Semester(s)</span>
                     <ul class="items" id="semestersListItems">
                     </ul>
                   </div>
