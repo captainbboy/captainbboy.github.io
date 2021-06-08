@@ -243,9 +243,10 @@
 
             updateGPA()
         }
-
+        
         function changeCurrentGPA(savedGPAName) {
-            if(savedGPAName == 'None Selected') {
+            if(savedGPAName == 'None Selected') {}
+            else if(savedGPAName == 'Add Blank') {
                 classNames = []
                 inputtedGPAValues = []
                 inputtedGradeValues = []
@@ -282,7 +283,7 @@
                     newDropDown.id = InputtedGPAName+"|||"
                     let checkBox = document.createElement('input')
                     checkBox.type = 'checkbox'
-                    checkBox.id = InputtedGPAName.toString() + 'id'
+                    checkBox.id = InputtedGPAName + 'id'
                     checkBox.onclick = function() {
                         if(checkBox.checked) selectedSemestersDropDown.push(checkBox)
                         else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
@@ -295,12 +296,15 @@
                     newDropDown.appendChild(newSpan)
                     checkList.appendChild(newDropDown)
                 }
+                console.log('InputtedGPAName: '+InputtedGPAName)
+                console.log('typeof savedGPAs['+InputtedGPAName+']: '+ typeof savedGPAs[InputtedGPAName])
                 savedGPAs[InputtedGPAName] = {
                     classNames: classNames,
                     inputtedGPAValues: inputtedGPAValues,
                     inputtedGradeValues: inputtedGradeValues,
                     setNumberOfClasses: setNumberOfClasses
                 }
+                console.log('typeof savedGPAs['+InputtedGPAName+']: '+ typeof savedGPAs[InputtedGPAName])
                 console.log(savedGPAs)
                 createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
             }
@@ -330,6 +334,7 @@
                         break;
                         }
                     }
+                    document.getElementById('InputtedGPAName').value = ""
                 }
             }
         }
@@ -358,7 +363,8 @@
     <h2>Saved GPAs:</h2>
     <div class="select" style="width: 25vw;">
         <select id="savedGPAsDropDown" oninput="changeCurrentGPA(this.value)">
-            <option value="None Selected" id="NoneSelected">None Selected</option>
+            <option value="None Selected" id="NoneSelected" selected disabled hidden>None Selected</option>
+            <option value="Add Blank" id="CreateBlank">Create Blank</option>
         </select>
     </div>
 
