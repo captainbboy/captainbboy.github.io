@@ -136,6 +136,11 @@
         }
 
         function updateGPA() {
+            for (let i = 0; i < parseInt(setNumberOfClasses); i++) {
+                if(!inputtedGPAValues[i]) inputtedGPAValues[i] = "4.0"
+                if(!inputtedGradeValues[i]) inputtedGradeValues[i] = "0"
+            }
+
             weightedSimples = 0;
             unweightedSimples = 0;
             sumOfGrades = 0;
@@ -299,9 +304,18 @@
                 console.log('InputtedGPAName: '+InputtedGPAName)
                 console.log('typeof savedGPAs['+InputtedGPAName+']: '+ typeof savedGPAs[InputtedGPAName])
                 savedGPAs[InputtedGPAName] = {
-                    classNames: classNames,
-                    inputtedGPAValues: inputtedGPAValues,
-                    inputtedGradeValues: inputtedGradeValues,
+                    classNames: classNames.filter((a, i) => {
+                        if(i+1 <= setNumberOfClasses) return true;
+                        else return false;
+                    }).map(a=>a),
+                    inputtedGPAValues: inputtedGPAValues.filter((a, i) => {
+                        if(i+1 <= setNumberOfClasses) return true;
+                        else return false;
+                    }).map(a=>a),
+                    inputtedGradeValues: inputtedGradeValues.filter((a, i) => {
+                        if(i+1 <= setNumberOfClasses) return true;
+                        else return false;
+                    }).map(a=>a),
                     setNumberOfClasses: setNumberOfClasses
                 }
                 console.log('typeof savedGPAs['+InputtedGPAName+']: '+ typeof savedGPAs[InputtedGPAName])
