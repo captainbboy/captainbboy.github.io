@@ -227,10 +227,11 @@
                 newSpan.innerHTML = " "+gpa
                 newDropDown.appendChild(newSpan)
                 checkBox.onclick = function() {
-                    if(checkBox.checked) selectedSemestersDropDown.push(checkBox)
-                    else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
+                    if(checkBox.checked) selectedSemestersDropDown.push(gpa)
+                    else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==gpa)
                     var anchor = document.getElementsByClassName('anchor')[0]
-                    anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)"
+                    anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)";
+                    updateOverallGPA();
                 }
                 checkList.appendChild(newDropDown)
             })
@@ -290,10 +291,11 @@
                     checkBox.type = 'checkbox'
                     checkBox.id = InputtedGPAName + 'id'
                     checkBox.onclick = function() {
-                        if(checkBox.checked) selectedSemestersDropDown.push(checkBox)
-                        else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==checkBox)
+                        if(checkBox.checked) selectedSemestersDropDown.push(InputtedGPAName)
+                        else selectedSemestersDropDown = selectedSemestersDropDown.filter(a=>a!==InputtedGPAName)
                         var anchor = document.getElementsByClassName('anchor')[0]
                         anchor.innerHTML = selectedSemestersDropDown.length+" Selected Semester(s)"
+                        updateOverallGPA()
                     }
                     newDropDown.appendChild(checkBox)
                     let newSpan = document.createElement('span')
@@ -362,6 +364,51 @@
             else
                 checkList.classList.add('visible');
         }
+
+        function updateOverallGPA() {
+            let GPAWeights = [];
+            let Grades = [];
+            selectedSemestersDropDown.forEach((savedSemesterName, i) => {
+                if(savedGPAs[savedSemesterName]) {
+                    for (let l = 0; l < parseInt(savedGPAs[savedSemesterName].setNumberOfClasses); l++) {
+                        if(savedGPAs[savedSemesterName].inputtedGPAValues[l]) GPAWeights.push(savedGPAs[savedSemesterName].inputtedGPAValues[l])
+                        else GPAWeights.push("4.0")
+
+                        if(savedGPAs[savedSemesterName].inputtedGradeValues[l]) Grades.push(savedGPAs[savedSemesterName].inputtedGradeValues[l])
+                        else Grades.push("0")
+                    }
+                } else {
+                    // Maybe later incorporate some sort of error notification system.
+                }
+            })
+
+            weightedSimples = 0;
+            unweightedSimples = 0;
+            sumOfGrades = 0;
+            totalGPAWeight = 0;
+
+            for (let i = 1; i < GPAWeights.length; i++) {
+                console.log(parseFloat(GPAWeights[i]), parseFloat(Grades[i]))
+                totalGPAWeight += parseFloat(GPAWeights[i])
+                sumOfGrades += (parseFloat(Grades[i]))
+                let weightedSimple = parseFloat(GPAWeights[i])*(parseFloat(Grades[i]))*0.01
+                weightedSimples += weightedSimple
+                let unweightedSimple = 4*(parseFloat(Grades[i]))*0.01
+                unweightedSimples += unweightedSimple
+            }
+
+            let numberOfClasses = GPAWeights.length;
+            let allenISDSumOfGrades = -(sumOfGrades-(numberOfClasses*100))*0.05
+
+            console.log(GPAWeights)
+            console.log(Grades)
+
+            document.getElementById('simpleAverageTotal').innerHTML = "Overall Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(2)
+            document.getElementById('simpleAverageUnweightedTotal').innerHTML = "Overall Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
+            document.getElementById('allenISDFormulaWeightedTotal').innerHTML = "Overall AllenISD Formula Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            document.getElementById('allenISDFormulaUnweightedTotal').innerHTML = "Overall AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            
+        }
 		
 		
     </script>
@@ -412,12 +459,16 @@
                 </span>
             </div>
             <div class="column" style="margin-left: -1px;">
-                <h2><strong>Calculate Overall GPA</strong></h2>
+                <h2><strong>Overall GPA:</strong></h2>
                 <div id="semestersList" class="dropdown-check-list" tabindex="100">
                     <span class="anchor" onclick="toggleSemestersCheckList()">Select Semester(s)</span>
                     <ul class="items" id="semestersListItems">
                     </ul>
-                  </div>
+                </div>
+                <h4 id="simpleAverageTotal">Overall Simple Average Weighted: </h4>
+                <h4 id="simpleAverageUnweightedTotal">Overall Simple Average Unweighted: </h4>
+                <h4 id="allenISDFormulaWeightedTotal">Overall AllenISD Formula Weighted: </h4>
+                <h4 id="allenISDFormulaUnweightedTotal">Overall AllenISD Formula Unweighted: </h4>
             </div>
         </div>
     </div>
