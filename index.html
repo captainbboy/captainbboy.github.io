@@ -202,6 +202,7 @@
         }
 
         function setup() {
+            checkWindowSize()
             let savedGPAsDropDown = document.getElementById('savedGPAsDropDown')
             var checkList = document.getElementById('semestersListItems');
 
@@ -323,6 +324,9 @@
                 console.log('typeof savedGPAs['+InputtedGPAName+']: '+ typeof savedGPAs[InputtedGPAName])
                 console.log(savedGPAs)
                 createCookie("savedGPAs", JSON.stringify(savedGPAs), 365)
+                notify('success', `'${InputtedGPAName}' has been saved.`)
+            } else {
+                notify('error', `You did not type anything into the semester name box.`)
             }
         }
 
@@ -351,7 +355,12 @@
                         }
                     }
                     document.getElementById('InputtedGPAName').value = ""
+                    notify('success', `'${InputtedGPAName}' has been deleted.`)
+                } else {
+                    notify('error', `Could not find '${savedSemesterName}' in savedGPAs.`)
                 }
+            } else {
+                notify('error', `You did not type anything into the semester name box.`)
             }
         }
 
@@ -387,7 +396,7 @@
                         else Grades.push("0")
                     }
                 } else {
-                    // Maybe later incorporate some sort of error notification system.
+                    notify('error', `Could not find '${savedSemesterName}' in savedGPAs.`)
                 }
             })
 
@@ -414,6 +423,71 @@
             document.getElementById('allenISDFormulaUnweightedTotal').innerHTML = "Overall AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
             
         }
+
+        let currentNotifications = []
+
+        function notify(type, message) {
+            if(!currentNotifications.length) {
+                currentNotifications.push({type: type, msg: message})
+                sendNotification()
+            } else currentNotifications.push({type: type, msg: message})
+        }
+
+        function sendNotification() {
+            if(!currentNotifications.length) return;
+            const notif = document.getElementById('notif')
+            const notifidentifier = document.getElementById('notifidentifier')
+            const notiftext = document.getElementById('notiftext')
+
+            notif.classList.add('animate-notif')
+            notifidentifier.classList.add('animate-identifier')
+            notiftext.classList.add('animate-text')
+            notif.classList.remove('hidden')
+            switch(currentNotifications[0].type) {
+                case 'success':
+                    notif.style.backgroundColor = "#237563"
+                    notiftext.style.color = "#237563"
+                    notiftext.style.backgroundColor = "#3DB16F"
+                    notifidentifier.style.color = "#237563"
+                    notifidentifier.style.backgroundColor = "#3DB16F"
+                    notifidentifier.innerHTML = "✓";
+                    break;
+                case 'error':
+                    notif.style.backgroundColor = "#B00020"
+                    notiftext.style.color = "#B00020"
+                    notiftext.style.backgroundColor = "#CF6679"
+                    notifidentifier.style.color = "#B00020"
+                    notifidentifier.style.backgroundColor = "#CF6679"
+                    notifidentifier.innerHTML = "⚠";
+                    break;
+                case 'warning':
+                    notif.style.backgroundColor = "#F5B301"
+                    notiftext.style.color = "#F5B301"
+                    notiftext.style.backgroundColor = "#FED053"
+                    notifidentifier.style.color = "#F5B301"
+                    notifidentifier.style.backgroundColor = "#FED053"
+                    notifidentifier.innerHTML = "⚠";
+                    break;
+            }
+            notiftext.innerHTML = currentNotifications[0].msg;
+            setTimeout(() => {
+                notif.classList.remove('animate-notif')
+                notifidentifier.classList.remove('animate-identifier')
+                notiftext.classList.remove('animate-text')
+                notif.classList.add('hidden')
+                if(currentNotifications.length-1 > 0) setTimeout(() => {
+                    currentNotifications.shift()
+                    sendNotification()
+                }, 150);
+            }, 4000);
+        }
+
+        window.onresize = checkWindowSize;
+
+        function checkWindowSize() {
+            if(window.innerWidth < 500) document.getElementById('notifidentifier').style.display = 'none'
+            else document.getElementById('notifidentifier').style.display = 'block'
+        }
 		
 		
     </script>
@@ -421,6 +495,13 @@
    <body onload="setup()">
 
     <h1>Calculate Your GPA:</h1>
+
+    <div class="notification hidden" id="notif">
+        <div class="content">
+          <div class="identifier" id="notifidentifier"></div>
+          <div class="text" id="notiftext">has been deleted!</div>
+        </div>
+    </div>
 
     <h2>How many classes do you have?</h2>
     <input id="sliderrange" type="range" min="1" max="10" value="7" oninput="setTable(this.value)">
