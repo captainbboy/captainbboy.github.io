@@ -368,6 +368,15 @@
         function updateOverallGPA() {
             let GPAWeights = [];
             let Grades = [];
+
+            if(!selectedSemestersDropDown.length) {
+                document.getElementById('simpleAverageTotal').innerHTML = "Overall Simple Average Weighted: 0.00"
+                document.getElementById('simpleAverageUnweightedTotal').innerHTML = "Overall Simple Average Unweighted: 0.00"
+                document.getElementById('allenISDFormulaWeightedTotal').innerHTML = "Overall AllenISD Formula Weighted: 0.00"
+                document.getElementById('allenISDFormulaUnweightedTotal').innerHTML = "Overall AllenISD Formula Unweighted: 0.00"
+                return;
+            }
+
             selectedSemestersDropDown.forEach((savedSemesterName, i) => {
                 if(savedGPAs[savedSemesterName]) {
                     for (let l = 0; l < parseInt(savedGPAs[savedSemesterName].setNumberOfClasses); l++) {
@@ -388,7 +397,6 @@
             totalGPAWeight = 0;
 
             for (let i = 0; i < GPAWeights.length; i++) {
-                console.log(parseFloat(GPAWeights[i]), parseFloat(Grades[i]))
                 totalGPAWeight += parseFloat(GPAWeights[i])
                 sumOfGrades += (parseFloat(Grades[i]))
                 let weightedSimple = parseFloat(GPAWeights[i])*(parseFloat(Grades[i]))*0.01
@@ -399,9 +407,6 @@
 
             let numberOfClasses = GPAWeights.length;
             let allenISDSumOfGrades = -(sumOfGrades-(numberOfClasses*100))*0.05
-
-            console.log(GPAWeights)
-            console.log(Grades)
 
             document.getElementById('simpleAverageTotal').innerHTML = "Overall Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(2)
             document.getElementById('simpleAverageUnweightedTotal').innerHTML = "Overall Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
