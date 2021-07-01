@@ -298,6 +298,15 @@ li {
     opacity: 0%;
   }
 
+  .notification-holder {
+    position: fixed;
+    top: 5vh;
+    width: 100%;
+    min-height: 10vh;
+    height: auto;
+    z-index: 100;
+  }
+
   .notification {
     position: absolute;
     display: block;

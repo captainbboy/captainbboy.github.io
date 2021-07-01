@@ -438,6 +438,7 @@
             const notif = document.getElementById('notif')
             const notifidentifier = document.getElementById('notifidentifier')
             const notiftext = document.getElementById('notiftext')
+            const notifholder = document.getElementById('notif-holder')
 
             notif.classList.add('animate-notif')
             notifidentifier.classList.add('animate-identifier')
@@ -471,15 +472,17 @@
             }
             notiftext.innerHTML = currentNotifications[0].msg;
             setTimeout(() => {
+                notif.classList.add('hidden')
                 notif.classList.remove('animate-notif')
                 notifidentifier.classList.remove('animate-identifier')
                 notiftext.classList.remove('animate-text')
-                notif.classList.add('hidden')
-                if(currentNotifications.length-1 > 0) setTimeout(() => {
-                    currentNotifications.shift()
-                    sendNotification()
-                }, 150);
-            }, 4000);
+                if(currentNotifications.length-1 > 0) {
+                    setTimeout(() => {
+                        currentNotifications.shift()
+                        sendNotification()
+                    }, 150);
+                } else currentNotifications.shift()
+            }, 3900);
         }
 
         window.onresize = checkWindowSize;
@@ -496,10 +499,12 @@
 
     <h1>Calculate Your GPA:</h1>
 
-    <div class="notification hidden" id="notif">
-        <div class="content">
-          <div class="identifier" id="notifidentifier"></div>
-          <div class="text" id="notiftext">has been deleted!</div>
+    <div class="notification-holder" id="notif-holder">
+        <div class="notification hidden" id="notif">
+            <div class="content">
+            <div class="identifier" id="notifidentifier"></div>
+            <div class="text" id="notiftext">has been deleted!</div>
+            </div>
         </div>
     </div>
 
