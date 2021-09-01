@@ -74,6 +74,11 @@ li {
     margin-right: auto;
 }
 
+.contribute{
+  padding-left: 4.2vw;
+  margin-top: 1vh;
+}
+
 .GPAInputDiv {
     overflow-x: auto;
     padding-left: 1vw;
