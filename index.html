@@ -165,10 +165,10 @@
             let numberOfClasses = (gradeRow.childNodes.length-1)
             let allenISDSumOfGrades = -(sumOfGrades-(numberOfClasses*100))*0.05
 
-            document.getElementById('simpleAverage').innerHTML = "Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(2)
-            document.getElementById('simpleAverageUnweighted').innerHTML = "Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
-            document.getElementById('allenISDFormulaWeighted').innerHTML = "AllenISD Formula Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
-            document.getElementById('allenISDFormulaUnweighted').innerHTML = "AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            document.getElementById('simpleAverage').innerHTML = "Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(6)
+            document.getElementById('simpleAverageUnweighted').innerHTML = "Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(6)
+            document.getElementById('allenISDFormulaWeighted').innerHTML = "AllenISD Formula Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(6)
+            document.getElementById('allenISDFormulaUnweighted').innerHTML = "AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(6)
 
             createCookie("inputtedGPAValues", inputtedGPAValues, 365)
             createCookie("inputtedGradeValues", inputtedGradeValues, 365)
@@ -418,10 +418,10 @@
             let numberOfClasses = GPAWeights.length;
             let allenISDSumOfGrades = -(sumOfGrades-(numberOfClasses*100))*0.05
 
-            document.getElementById('simpleAverageTotal').innerHTML = "Overall Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(2)
-            document.getElementById('simpleAverageUnweightedTotal').innerHTML = "Overall Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(2)
-            document.getElementById('allenISDFormulaWeightedTotal').innerHTML = "Overall AllenISD Formula Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
-            document.getElementById('allenISDFormulaUnweightedTotal').innerHTML = "Overall AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(2)
+            document.getElementById('simpleAverageTotal').innerHTML = "Overall Simple Average Weighted: "+(weightedSimples/numberOfClasses).toFixed(6)
+            document.getElementById('simpleAverageUnweightedTotal').innerHTML = "Overall Simple Average Unweighted: "+(unweightedSimples/numberOfClasses).toFixed(6)
+            document.getElementById('allenISDFormulaWeightedTotal').innerHTML = "Overall AllenISD Formula Weighted: "+(((totalGPAWeight-allenISDSumOfGrades)/numberOfClasses)).toFixed(6)
+            document.getElementById('allenISDFormulaUnweightedTotal').innerHTML = "Overall AllenISD Formula Unweighted: "+((((4*numberOfClasses)-allenISDSumOfGrades)/numberOfClasses)).toFixed(6)
             
         }
 
