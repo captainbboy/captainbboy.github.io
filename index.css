@@ -328,6 +328,7 @@ li {
   }
 
   .notification-holder {
+    pointer-events: none;
     position: fixed;
     top: 5vh;
     width: 100%;
