@@ -261,7 +261,7 @@ function setup() {
         var didError = false;
         var converted = [];
         try {
-            converted = JSON.parse(unescape(get('import')))
+            converted = JSON.parse(unescape(get('import').replace(/\'/g, '"')))
         } catch(e) {
             didError = true;
         }
