@@ -267,6 +267,7 @@ function setup() {
         }
     
         if(didError || typeof converted !== "object" || Array.isArray(converted) || converted === null) {
+            console.log("didError")
             return;
         }
     
